@@ -1,0 +1,12 @@
+name = "worker-kit-email"
+compatibility_date = "2022-05-13"
+main = "./worker.mjs"
+
+[site]
+bucket = "./.cloudflare/assets"
+
+[build]
+command = 'npm run build'
+
+# [secrets]
+# API_KEY
