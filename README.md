@@ -2,6 +2,9 @@
 
 Develop transactional emails quickly using regular SvelteKit routes in your browser, then take it to production by POSTing to that route after deploying on CloudFlare Workers.
 
+![email](https://user-images.githubusercontent.com/55932282/168412180-3ba5e2c4-f4d3-456b-bb44-5b045d565988.png)
+
+
 ## How does it work?
 
 Develop your email templates as regular SvelteKit routes (for example. `routes/email/TestEmail`).
