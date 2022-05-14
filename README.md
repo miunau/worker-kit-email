@@ -4,7 +4,7 @@ Develop transactional emails quickly using regular SvelteKit routes in your brow
 
 ## How does it work?
 
-Develop your email templates as regular SvelteKit routes (for example. `routes/email/confirm`).
+Develop your email templates as regular SvelteKit routes (for example. `routes/email/TestEmail`).
 
 Put a secret called `API_KEY` using wrangler:
 ```sh
@@ -16,15 +16,8 @@ Once published on CloudFlare Workers, or when using `wrangler dev`, POST some JS
 ```sh
 curl -H "Authorization: your_api_key" \
   -H "Content-Type: application/json" \
-  -X POST -d '{' \
-+'      "to": {' \
-+'        "name": "John Doe",' \
-+'        "email": "john.doe@foobar.com"' \
-+'      },' \
-+'      "from": "no-reply@myapp.com",' \
-+'      "subject": "Please confirm your sign-up"' \
-+'    }' \
-  https://youremailworker.company.workers.dev/email/confirm
+  -X POST -d '{ "to": { "name": "John Doe", "email": "john.doe@foobar.com" }, "from": "no-reply@myapp.com", "subject": "Test email from SvelteKit!" }' \
+  https://youremailworker.company.workers.dev/email/TestEmail
 ```
 
 The route will be rendered on the worker, its CSS will be inlined and the content will be sent to the recipient.

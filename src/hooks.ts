@@ -1,11 +1,11 @@
-import { inline } from "$lib/email/inline";
-import { WorkerEmail, type WorkerEmailRequest } from "$lib/email/WorkerEmail";
+import { inline } from "$lib/email/inline.js";
+import { WorkerEmail, type WorkerEmailRequest } from "$lib/email/WorkerEmail.js";
 
 /** @type {import('@sveltejs/kit').Handle} */
-export async function handle({ event, resolve }) {
+export async function handle({ event, resolve, platform }) {
 
   const request = event.request;
-
+  
   if (request.method === 'POST') {
     if (!request.body) {
       return {
@@ -16,6 +16,8 @@ export async function handle({ event, resolve }) {
       }
     }
   }
+
+  let fail = -1;
   
   const response = await resolve(event, {
     ssr: true,
@@ -31,29 +33,37 @@ export async function handle({ event, resolve }) {
           const requestContentType = request.headers.get('content-type');
           let body: WorkerEmailRequest;
 
-          // Parse request body as either JSON or form data
           if(requestContentType && requestContentType.includes('application/json')) {
             body = await request.json();
-          } else if(requestContentType && requestContentType.includes('application/x-www-form-urlencoded')) {
-            body = await request.formData();
           } else {
-            throw new Error('Unsupported content-type');
+            fail = 400;
+            return 'Request body must be JSON';
           }
 
           // Get the authorization header
           const authHeader = request.headers.get('authorization');
+          const API_KEY = import.meta?.env?.API_KEY || event.platform?.env?.API_KEY;
 
-          // Ensure authorization is ok
+          // Ensure authorization is present
           if (!authHeader) {
-            throw new Error('Authorization header is required');
+            fail = 400;
+            return 'Authorization header is required';
           }
 
-          //@ts-ignore
-          if (authHeader !== env.API_KEY);
+          // Require authorization header
+          if (authHeader !== API_KEY) {
+            fail = 400;
+            return 'Invalid authorization header';
+          }
 
+          console.log('[Email] Received request:', JSON.stringify(body));
+
+          // Inline css in the html
           const inlinedHtml = inline(opts.html);
 
           const { to, from, subject, data } = body;
+
+          // Construct the email
           const email = new WorkerEmail({
             to,
             from,
@@ -61,22 +71,29 @@ export async function handle({ event, resolve }) {
             data,
             html: inlinedHtml,
           });
+
+          // Send the email
           await email.send();
-          return {
-            status: 200,
-            headers: {
-              'Content-Type': 'text/html',
-            },
-            body: inlinedHtml,
-          };
+
+          return inlinedHtml;
         } catch(err) {
           console.error('[Email.send]', err);
-          throw new Error('An error occurred');
+          fail = 500;
+          return 'Failed to send email';
         }
       }
       return opts.html;
     }
   });
- 
+
+  if(fail > -1) {
+    return new Response(response.body, {
+      status: fail,
+      headers: {
+        'content-type': 'text/plain',
+      }
+    });
+  }
+
   return response;
 }

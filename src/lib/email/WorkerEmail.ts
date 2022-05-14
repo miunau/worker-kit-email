@@ -159,25 +159,30 @@ export class WorkerEmail {
       ],
     };
 
-    console.log('body:', JSON.stringify(body, null, 2));
+    if (import.meta.env.MODE === 'production') {
+      const request = new Request(this.emailHost, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+  
+      const response = await fetch(request);
 
-    const request = new Request(this.emailHost, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
+      // Check if request was successful
+      if (!response.ok) {
+        const text = await response.text();
+        console.error('[WorkerEmail] Failed to send email', response.status, text);
+        throw new Error(`Failed to send email: ${response.status} ${text}`);
+      }
 
-    const response = await fetch(request);
-
-    // Check if request was successful
-    if (!response.ok) {
-      const text = await response.text();
-      console.error('[WorkerEmail] Failed to send email', response.status, text);
-      throw new Error(`Failed to send email`);
+      return true;
     }
-
-    return response;
+    else {
+      console.log('In development mode, here is the email request:');
+      console.log('[WorkerEmail]', JSON.stringify(body, null, 2));
+      return true;
+    }
   }
 }
