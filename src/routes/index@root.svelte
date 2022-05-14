@@ -11,10 +11,7 @@
 
 	<p>With CloudFlare's new <a href="https://blog.cloudflare.com/sending-email-from-workers-with-mailchannels/">MailChannel</a> integration, you can send emails from workers.</p>
 
-	<h2>Try it out!</h2>
-	<p>Enter your email address:</p>
-	<input type="email" placeholder="Your email">
-	<button>Send</button>
+	<p><a href="https://github.com/miunau/worker-kit-email">View repo on GitHub</a></p>
 </section>
 
 <style>

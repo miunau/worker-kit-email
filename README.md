@@ -14,7 +14,7 @@ wrangler secret put API_KEY
 Once published on CloudFlare Workers, or when using `wrangler dev`, POST some JSON to that route to send it as an email:
 
 ```sh
-curl -H "Authorization: your-auth-key" \
+curl -H "Authorization: your_api_key" \
   -H "Content-Type: application/json" \
   -X POST -d '{' \
 +'      "to": {' \
@@ -75,6 +75,12 @@ Then, pass it in your POST data:
 ## How do I use it?
 
 Clone this repo.
+
+## TODO
+
+- [ ] cc and bcc fields (what's the API call?)
+- [ ] attachments (do they even work?)
+- [ ] "click to view this email in your browser" link injection
 
 ## License
 
