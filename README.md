@@ -6,7 +6,12 @@ Develop transactional emails quickly using regular SvelteKit routes in your brow
 
 Develop your email templates as regular SvelteKit routes (for example. `routes/email/confirm`).
 
-Once deployed on CloudFlare Workers, or when using `wrangler dev`, POST some JSON to that route to send it as an email:
+Put a secret called `API_KEY` using wrangler:
+```sh
+wrangler secret put API_KEY
+```
+
+Once published on CloudFlare Workers, or when using `wrangler dev`, POST some JSON to that route to send it as an email:
 
 ```sh
 curl -H "Authorization: your-auth-key" \
