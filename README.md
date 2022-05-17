@@ -37,12 +37,6 @@ export type EmailAddress = {
   name: string;
 };
 
-export type Attachment {
-  filename: string;
-  content: string; // As base64
-  contentType: string; // Mimetype
-  size: number; // Bytes
-}
 ```
 
 Variable | Type     | Explanation
@@ -50,9 +44,8 @@ Variable | Type     | Explanation
 subject  | `string` | E-mail subject
 from     | `EmailAddress`, `string` | From email address
 to       | `EmailAddress[]`, `EmailAddress` or `string` | To email address(es)
-cc?       | `EmailAddress[]`, `EmailAddress` or `string` | CC email address(es) - not working yet
-bcc?       | `EmailAddress[]`, `EmailAddress` or `string` | BCC email address(es) - not working yet
-attachments? | `Attachment[]`, `Attachment` | Attachments (base64) - not working yet
+cc?       | `EmailAddress[]`, `EmailAddress` or `string` | CC email address(es)
+bcc?       | `EmailAddress[]`, `EmailAddress` or `string` | BCC email address(es) 
 data? | `{ [key: string]: any }` | Template variables
 
 ## Template variables
@@ -74,8 +67,6 @@ Clone this repo.
 
 ## TODO
 
-- [ ] cc and bcc fields (what's the API call?)
-- [ ] attachments (do they even work?)
 - [ ] "click to view this email in your browser" link injection
 
 ## License
